@@ -1,14 +1,11 @@
 {
-  "name": "@mails2nithin/time-entry",
-  "version": "2.9.0",
+  "name": "@codebynithin/time-entry",
+  "version": "1.0.0",
   "description": "Nithin time entry cli",
   "main": "index.js",
-  "author": {
-    "name": "Nithin V",
-    "email": "mails2nithin@gmail.com"
-  },
+  "author": "Nithin V <mails2nithin@gmail.com>",
   "bin": {
-    "timectl": "./index.js"
+    "timectl": "index.js"
   },
   "scripts": {
     "start": "node index",
