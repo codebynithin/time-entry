@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/nithinv86/time-entry.git"
+    "url": "git+https://github.com/codebynithin/time-entry.git"
   },
   "keywords": [
     "time",
@@ -34,9 +34,9 @@
   ],
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/nithinv86/time-entry/issues"
+    "url": "https://github.com/codebynithin/time-entry/issues"
   },
-  "homepage": "https://gitlab.com/nithinv86/time-entry#readme",
+  "homepage": "https://github.com/codebynithin/time-entry#readme",
   "dependencies": {
     "axios": "~1.7.7",
     "chalk": "~4.1.2",
