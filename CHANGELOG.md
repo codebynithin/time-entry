@@ -4,4 +4,4 @@
 
 ### Initial Release
 
-We are pleased to announce the first official release of **Nithin Utils**.
+We are pleased to announce the first official release of **Time Entry**.
