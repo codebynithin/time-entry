@@ -91,7 +91,7 @@ const getReport = async (filters) => {
       }
 
       res[date].total = res[date].task + res[date].adhoc;
-      res[date].pending = 480 - res[date].total;
+      res[date].pending = res[date].total - 480;
 
       return res;
     }, {});
