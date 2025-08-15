@@ -5,8 +5,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/nithinv86/time-entry">
-    <img src="https://github.com/nithinv86/time-entry/favicon.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/codebynithin/time-entry">
+    <img src="https://github.com/codebynithin/time-entry/favicon.png" alt="Logo" width="80" height="80">
   </a>
 </div>
 
