@@ -7,6 +7,7 @@ const { updateTask, deleteTask } = require('./update-delete-task');
 const { getGitlabActivities } = require('./get-gitlab-activities');
 const { getZohoTasks } = require('./get-zoho-tasks');
 const axios = require('axios');
+const { ACTIONS } = require('./enums/actions.enum');
 const processArgs = async (type, value) => {
   try {
     await checkConfig();
@@ -14,49 +15,49 @@ const processArgs = async (type, value) => {
     const values = value ? removeEmpty(value?.split(' -')) : value;
 
     switch (type) {
-      case 'add': {
+      case ACTIONS.ADD: {
         await addNewTask(values);
 
         break;
       }
 
-      case 'update': {
+      case ACTIONS.UPDATE: {
         await updateTask(values);
 
         break;
       }
 
-      case 'delete': {
+      case ACTIONS.DELETE: {
         console.log(await deleteTask(values));
 
         break;
       }
 
-      case 'status': {
+      case ACTIONS.STATUS: {
         await getStatus(values);
 
         break;
       }
 
-      case 'entries': {
+      case ACTIONS.ENTRIES: {
         console.table(await getTasksByDate(values));
 
         break;
       }
 
-      case 'zoho': {
+      case ACTIONS.ZOHO: {
         console.log('Final status: ', await logTaskHoursAndSync());
 
         break;
       }
 
-      case 'gitlab': {
+      case ACTIONS.GITLAB: {
         await getGitlabActivities(values);
 
         break;
       }
 
-      case 'merge': {
+      case ACTIONS.MERGE: {
         const tasks = await getZohoTasks({ params: { type: ['2'] } });
         const taskIds = tasks
           .filter((task) => task.gitlab_iid)
@@ -112,8 +113,7 @@ const processArgs = async (type, value) => {
         break;
       }
 
-      case 'v':
-      case 'version': {
+      case ACTIONS.VERSION: {
         const path = require('path');
         const packageJson = require(path.resolve(__dirname, '../package.json'));
         const packageVersion = packageJson.version;
@@ -123,8 +123,7 @@ const processArgs = async (type, value) => {
         break;
       }
 
-      case 'h':
-      case 'help': {
+      case ACTIONS.HELP: {
         console.log(`usage: timectl \t[version] [help] [init] [switch]
         \t[add] [update] [delete] [status] [entries] [zoho]\n`);
         console.log(`Below are common Time Entry commands utilized in various scenarios:\n
@@ -147,7 +146,7 @@ Running 'timectl help' will list available subcommands and provide some conceptu
       }
 
       default: {
-        console.error(`timectl: '${type}' is not a timectl command. See 'timectl -help'.`);
+        console.error(`timectl: '${type}' is not a timectl command. See 'timectl help'.`);
 
         return;
       }
