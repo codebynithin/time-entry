@@ -135,13 +135,13 @@ const getHeaders = async (config) => {
   }
 
   return {
-    authority: 'externalusers.zohosprints.com',
+    authority: config.zoho.url,
     accept: '*/*',
     'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8,ml;q=0.7',
     'cache-control': 'no-cache',
     cookie: config.zoho.cookie,
     pragma: 'no-cache',
-    referer: 'https://externalusers.zohosprints.com/workspace/4medica/client/wmoku',
+    referer: `https://${config.zoho.url}/workspace/4medica/client/wmoku`,
     'sec-ch-ua': '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
     'sec-ch-ua-mobile': '?0',
     'sec-ch-ua-platform': '"macOS"',
@@ -165,7 +165,7 @@ const getProjects = async (userConfig) => {
     action: 'recentprojects',
     team: '803166918',
   };
-  const parentUrl = `https://externalusers.zohosprints.com/zsapi/team/${p.team}/projects/?action=${p.action}`;
+  const parentUrl = `https://${userConfig.zoho.url}/zsapi/team/${p.team}/projects/?action=${p.action}`;
 
   try {
     const response = await axios.get(parentUrl, { headers });
@@ -197,7 +197,7 @@ const getSprints = async ({ params }) => {
   } else {
     p.type = ['2', '3'];
   }
-  const parentUrl = `https://externalusers.zohosprints.com/zsapi/team/${p.team}/projects/${
+  const parentUrl = `https://${config.zoho.url}/zsapi/team/${p.team}/projects/${
     p.project
   }/sprints/?action=${p.action}&range=${p.range}&type=${encodeURIComponent(
     JSON.stringify(p.type),
@@ -269,6 +269,7 @@ const userConfig = async (jsonData) => {
     try {
       if (!jsonData) {
         const data = readFileSync(filePath);
+
         jsonData = JSON.parse(data);
       }
 

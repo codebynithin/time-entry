@@ -43,7 +43,7 @@ const logTaskHoursAndSync = async () => {
 
     const zonedDate = utcToZonedTime(taskDate, 'Asia/Kolkata');
     const date = format(zonedDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
-    const parentUrl = `https://externalusers.zohosprints.com/zsapi/team/803166918/projects/${project}/sprints/${activeSprint?.[0]?.value}/item/${zohoTask?.value}/timesheet/?action=additemlog`;
+    const parentUrl = `https://${config.zoho.url}/zsapi/team/803166918/projects/${project}/sprints/${activeSprint?.[0]?.value}/item/${zohoTask?.value}/timesheet/?action=additemlog`;
 
     newData.append('users', config.zoho.userId);
     newData.append('duration', duration);

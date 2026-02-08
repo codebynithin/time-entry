@@ -51,7 +51,7 @@ const getTasksBySprint = async ({ params, headers }) => {
     subitem: params.subitem || false,
     team: '803166918',
   };
-  const parentUrl = `https://externalusers.zohosprints.com/zsapi/team/${p.team}/projects/${p.project}/sprints/${p.sprint}/item/?action=${p.action}&range=${p.range}&index=${p.index}&subitem=${p.subitem}&customviewid=${zoho.customviewid}`;
+  const parentUrl = `https://${zoho.url}/zsapi/team/${p.team}/projects/${p.project}/sprints/${p.sprint}/item/?action=${p.action}&range=${p.range}&index=${p.index}&subitem=${p.subitem}&customviewid=${zoho.customviewid}`;
 
   try {
     const response = await axios.get(parentUrl, { headers });
