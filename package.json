@@ -38,10 +38,10 @@
   },
   "homepage": "https://github.com/codebynithin/time-entry#readme",
   "dependencies": {
-    "axios": "~1.7.7",
+    "axios": "~1.13.5",
     "chalk": "~4.1.2",
     "cheerio": "~1.0.0-rc.12",
-    "compression": "~1.7.4",
+    "compression": "~1.8.1",
     "date-fns": "~2.30.0",
     "date-fns-tz": "~2.0.1",
     "dotenv": "~16.4.5",
