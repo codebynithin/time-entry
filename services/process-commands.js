@@ -1,5 +1,5 @@
 const { checkConfig } = require('./init-config');
-const { removeEmpty } = require('./utils');
+const { removeEmpty, printTable } = require('./utils');
 const { getStatus, getTasksByDate } = require('./get-report');
 const { logTaskHoursAndSync } = require('./log-task-hours-and-sync');
 const { addNewTask } = require('./add-task');
@@ -40,7 +40,7 @@ const processArgs = async (type, value) => {
       }
 
       case ACTIONS.ENTRIES: {
-        console.table(await getTasksByDate(values));
+        printTable(await getTasksByDate(values));
 
         break;
       }
@@ -98,7 +98,7 @@ const processArgs = async (type, value) => {
           }),
         );
 
-        console.table(
+        printTable(
           mergeRequests.map((mr) => ({
             'Task ID': mr.taskId,
             'MR IID': mr.gitlabIid,

@@ -291,12 +291,242 @@ const writeFileSync = (path, data) => {
   }
 };
 
+// ANSI color codes for table
+const colors = {
+  reset: '\x1b[0m',
+  bold: '\x1b[1m',
+  dim: '\x1b[2m',
+  cyan: '\x1b[36m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  magenta: '\x1b[35m',
+  blue: '\x1b[34m',
+  white: '\x1b[37m',
+  bgBlue: '\x1b[44m',
+  bgCyan: '\x1b[46m',
+};
+
+// Unicode box-drawing characters
+const box = {
+  topLeft: '╭',
+  topRight: '╮',
+  bottomLeft: '╰',
+  bottomRight: '╯',
+  horizontal: '─',
+  vertical: '│',
+  teeDown: '┬',
+  teeUp: '┴',
+  teeRight: '├',
+  teeLeft: '┤',
+  cross: '┼',
+};
+
+// Loading spinner frames
+const spinnerFrames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+
+/**
+ * Create a loading spinner for async operations
+ * @param {string} message - Loading message to display
+ * @returns {Object} Spinner controller with start() and stop(finalMessage) methods
+ */
+const createSpinner = (message = 'Loading') => {
+  let frameIndex = 0;
+  let interval = null;
+  let isSpinning = false;
+
+  const start = () => {
+    if (isSpinning) return;
+    isSpinning = true;
+    process.stdout.write('\x1b[?25l'); // Hide cursor
+
+    interval = setInterval(() => {
+      const frame = spinnerFrames[frameIndex];
+      process.stdout.write(`\r${colors.cyan}${frame}${colors.reset} ${message}...`);
+      frameIndex = (frameIndex + 1) % spinnerFrames.length;
+    }, 80);
+  };
+
+  const stop = (finalMessage = null, success = true) => {
+    if (!isSpinning) return;
+    isSpinning = false;
+
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+    }
+
+    process.stdout.write('\x1b[?25h'); // Show cursor
+    process.stdout.write('\r\x1b[K'); // Clear line
+
+    if (finalMessage) {
+      const icon = success
+        ? `${colors.green}✔${colors.reset}`
+        : `${colors.yellow}✖${colors.reset}`;
+      console.log(`${icon} ${finalMessage}`);
+    }
+  };
+
+  const update = (newMessage) => {
+    message = newMessage;
+  };
+
+  return { start, stop, update };
+};
+
+/**
+ * Print a beautiful CLI table
+ * @param {Array<Object>} data - Array of objects to display
+ * @param {Object} options - Configuration options
+ * @param {number} options.maxColWidth - Maximum column width (default: 20)
+ * @param {Array<string>} options.columns - Specific columns to display (default: all)
+ * @param {boolean} options.sort - Whether to sort by first column (default: true)
+ * @param {string} options.sortBy - Column to sort by (default: first column)
+ * @param {string} options.sortOrder - 'asc' or 'desc' (default: 'asc')
+ */
+const printTable = (data, options = {}) => {
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    console.log(`${colors.yellow}No data to display${colors.reset}`);
+    return;
+  }
+
+  // Filter out undefined/null entries
+  let filteredData = data.filter((item) => item != null);
+
+  if (filteredData.length === 0) {
+    console.log(`${colors.yellow}No data to display${colors.reset}`);
+    return;
+  }
+
+  const { maxColWidth = 40, sort = true, sortOrder = 'asc' } = options;
+
+  // Get all columns from the data
+  const allColumns = [...new Set(filteredData.flatMap((row) => Object.keys(row)))];
+  const columns = options.columns || allColumns;
+
+  // Sort data by first column (or specified column)
+  const sortBy = options.sortBy || columns[0];
+  if (sort && sortBy) {
+    filteredData = [...filteredData].sort((a, b) => {
+      const valA = a[sortBy] ?? '';
+      const valB = b[sortBy] ?? '';
+
+      // Try numeric comparison first
+      const numA = Number(valA);
+      const numB = Number(valB);
+      if (!isNaN(numA) && !isNaN(numB)) {
+        return sortOrder === 'asc' ? numA - numB : numB - numA;
+      }
+
+      // Fall back to string comparison
+      const strA = String(valA).toLowerCase();
+      const strB = String(valB).toLowerCase();
+      if (sortOrder === 'asc') {
+        return strA.localeCompare(strB);
+      }
+      return strB.localeCompare(strA);
+    });
+  }
+
+  // Calculate column widths
+  const colWidths = {};
+  columns.forEach((col) => {
+    const headerLen = col.length;
+    const maxDataLen = Math.max(
+      ...filteredData.map((row) => String(row[col] ?? '').length),
+      headerLen,
+    );
+    colWidths[col] = Math.min(maxDataLen, maxColWidth);
+  });
+
+  // Helper to truncate and pad text
+  const formatCell = (text, width) => {
+    const str = String(text ?? '');
+    if (str.length > width) {
+      return str.substring(0, width - 2) + '..';
+    }
+    return str.padEnd(width);
+  };
+
+  // Top border
+  let topBorder = colors.cyan + box.topLeft;
+  columns.forEach((col, i) => {
+    topBorder += box.horizontal.repeat(colWidths[col] + 2);
+    topBorder += i < columns.length - 1 ? box.teeDown : box.topRight;
+  });
+  topBorder += colors.reset;
+
+  // Header row
+  let headerRow = colors.cyan + box.vertical + colors.reset;
+  columns.forEach((col) => {
+    const sortIndicator = sort && col === sortBy ? (sortOrder === 'asc' ? ' ↑' : ' ↓') : '';
+    headerRow +=
+      ' ' +
+      colors.bold +
+      colors.yellow +
+      formatCell(col + sortIndicator, colWidths[col]) +
+      colors.reset +
+      ' ' +
+      colors.cyan +
+      box.vertical +
+      colors.reset;
+  });
+
+  // Header separator
+  let headerSep = colors.cyan + box.teeRight;
+  columns.forEach((col, i) => {
+    headerSep += box.horizontal.repeat(colWidths[col] + 2);
+    headerSep += i < columns.length - 1 ? box.cross : box.teeLeft;
+  });
+  headerSep += colors.reset;
+
+  // Data rows
+  const dataRows = filteredData.map((row) => {
+    let dataRow = colors.cyan + box.vertical + colors.reset;
+    columns.forEach((col) => {
+      const value = row[col];
+      const cellColor = colors.white;
+
+      dataRow +=
+        ' ' +
+        cellColor +
+        formatCell(value, colWidths[col]) +
+        colors.reset +
+        ' ' +
+        colors.cyan +
+        box.vertical +
+        colors.reset;
+    });
+    return dataRow;
+  });
+
+  // Bottom border
+  let bottomBorder = colors.cyan + box.bottomLeft;
+  columns.forEach((col, i) => {
+    bottomBorder += box.horizontal.repeat(colWidths[col] + 2);
+    bottomBorder += i < columns.length - 1 ? box.teeUp : box.bottomRight;
+  });
+  bottomBorder += colors.reset;
+
+  // Print the table
+  console.log('');
+  console.log(topBorder);
+  console.log(headerRow);
+  console.log(headerSep);
+  dataRows.forEach((row) => console.log(row));
+  console.log(bottomBorder);
+  console.log(
+    `${colors.dim}  ${filteredData.length} row${filteredData.length !== 1 ? 's' : ''} total${colors.reset}`,
+  );
+  console.log('');
+};
+
 module.exports = {
   accessFileSync,
   appendFileSync,
   contentTableHeading,
   contentTableSeparator,
   convertToTaskData,
+  createSpinner,
   existsSync,
   filePath,
   getGitLabAuth,
@@ -306,6 +536,7 @@ module.exports = {
   groupBy,
   mkdirSync,
   path,
+  printTable,
   readFileSync,
   removeEmpty,
   rl,
