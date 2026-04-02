@@ -17,3 +17,9 @@ We are pleased to announce the first official release of **Time Entry**.
 ### Bug fixes
 
 - Fixed minor bugs.
+
+## [1.1.1] - 2026-04-02
+
+### Bug fixes
+
+- Fixed entries table breaking issue.
