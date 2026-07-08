@@ -6,7 +6,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/codebynithin/time-entry">
-    <img src="./favicon.png" alt="Logo" width="80" height="80">
+    <img src="https://raw.githubusercontent.com/codebynithin/time-entry/master/favicon.png" alt="Logo" width="80" height="80">
   </a>
 </div>
 

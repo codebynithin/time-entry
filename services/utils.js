@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { handleError } = require('./error');
 const os = require('os');
 const path = require('path');
 const readline = require('readline');
@@ -174,7 +175,7 @@ const getProjects = async (userConfig) => {
       .map(([key, value]) => ({ value: key, label: value[0] }))
       .sort((a, b) => (a.label < b.label ? 1 : a.label > b.label ? -1 : 0));
   } catch (error) {
-    console.error(error.message);
+    handleError(error);
   }
 };
 const getSprints = async ({ params }) => {
@@ -210,7 +211,7 @@ const getSprints = async ({ params }) => {
       .map(([key, value]) => ({ value: key, label: value[0] }))
       .sort((a, b) => (a.label < b.label ? 1 : a.label > b.label ? -1 : 0));
   } catch (error) {
-    console.error(error.message);
+    handleError(error);
   }
 };
 const groupBy = (arr, key) => {

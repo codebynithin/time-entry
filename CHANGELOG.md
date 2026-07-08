@@ -23,3 +23,9 @@ We are pleased to announce the first official release of **Time Entry**.
 ### Bug fixes
 
 - Fixed entries table breaking issue.
+
+## [1.2.0] - 2026-07-08
+
+### Feature
+
+- [#1](https://github.com/codebynithin/time-entry/issues/1): Display user friendly error messages.
