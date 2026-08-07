@@ -1,22 +1,16 @@
 # Changelog
 
-## [1.0.0] - 2025-07-12
-
-### Initial Release
-
-We are pleased to announce the first official release of **Time Entry**.
-
-## [1.0.1] - 2025-08-15
+## [1.2.1] - 2026-08-07
 
 ### Bug fixes
 
-- Fixed the issue with `init` command not working as expected.
+- Display status after add command.
 
-## [1.0.2] - 2025-10-09
+## [1.2.0] - 2026-07-08
 
-### Bug fixes
+### Feature
 
-- Fixed minor bugs.
+- [#1](https://github.com/codebynithin/time-entry/issues/1): Display user friendly error messages.
 
 ## [1.1.1] - 2026-04-02
 
@@ -24,8 +18,20 @@ We are pleased to announce the first official release of **Time Entry**.
 
 - Fixed entries table breaking issue.
 
-## [1.2.0] - 2026-07-08
+## [1.0.2] - 2025-10-09
 
-### Feature
+### Bug fixes
 
-- [#1](https://github.com/codebynithin/time-entry/issues/1): Display user friendly error messages.
+- Fixed minor bugs.
+
+## [1.0.1] - 2025-08-15
+
+### Bug fixes
+
+- Fixed the issue with `init` command not working as expected.
+
+## [1.0.0] - 2025-07-12
+
+### Initial Release
+
+We are pleased to announce the first official release of **Time Entry**.
