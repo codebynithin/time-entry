@@ -17,7 +17,7 @@ const processArgs = async (type, value) => {
     switch (type) {
       case ACTIONS.ADD: {
         await addNewTask(values);
-        await getStatus(values);
+        await getStatus();
 
         break;
       }
